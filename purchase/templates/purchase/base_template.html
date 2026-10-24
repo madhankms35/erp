@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{%block title%}ERP Demo{% endblock %}</title>
+    {% comment %} <!--{%block title%}Code99 Academy{% endblock %} marks a replaceable section 
+    a child template can override just this piece while everything stays the same--> {% endcomment %}
+</head>
+<body>
+    <header><h1>PURCHASE</h1></header>
+    <main>
+        {% block content %}
+        {% comment %}<!-- every child template fills in this block with its own actual page content 
+         this part that changes from page to page-->{% endcomment %}
+        {% endblock %}
+    </main>
+</body>
+</html>

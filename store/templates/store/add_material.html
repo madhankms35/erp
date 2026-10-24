@@ -1,0 +1,203 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Inward Material{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="page-title mb-1">Inward Material</h2>
+            <p class="page-description mb-0">
+                Record incoming deliveries against an existing purchase order.
+            </p>
+        </div>
+
+        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+            <i class="bi bi-box-arrow-in-down me-1"></i>
+            Store Operations
+        </span>
+    </div>
+
+    <!-- Success Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-light border shadow-sm d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-check-circle"></i>
+            <div>{{ message }}</div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Form Errors -->
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger mb-4">
+        <div class="fw-semibold mb-1">Unable to save inward material</div>
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Inward Entry Form -->
+        <div class="card border shadow-sm mb-4">
+            <div class="card-header bg-white py-3 px-4">
+                <h6 class="section-title mb-0">
+                    <i class="bi bi-clipboard2-plus me-2"></i>
+                    Inward Entry Details
+                </h6>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row g-4">
+
+                    {% for field in form %}
+                    <div class="col-12 col-md-6">
+
+                        <label for="{{ field.id_for_label }}"
+                               class="form-label fw-medium">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                        <div class="form-text">
+                            {{ field.help_text }}
+                        </div>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Selected Purchase Order Details -->
+        <div id="po-details" class="card border shadow-sm mb-4" style="display: none;">
+            <div class="card-header bg-white py-3 px-4">
+                <h6 class="section-title mb-0">
+                    <i class="bi bi-file-earmark-text me-2"></i>
+                    Purchase Order Details
+                </h6>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="small text-muted mb-1">Material</div>
+                        <div id="po-material" class="fw-semibold">—</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="small text-muted mb-1">Supplier</div>
+                        <div id="po-supplier" class="fw-semibold">—</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="small text-muted mb-1">Ordered Quantity</div>
+                        <div id="po-ordered" class="fw-semibold">—</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="small text-muted mb-1">Previously Received</div>
+                        <div id="po-received" class="fw-semibold">—</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="small text-muted mb-1">Balance to Receive</div>
+                        <div id="po-balance" class="fw-semibold">—</div>
+                    </div>
+
+                </div>
+
+                <div class="alert alert-light border mt-4 mb-0 small">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Enter a quantity no greater than the remaining purchase order balance.
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex flex-wrap justify-content-end gap-2">
+            <button type="submit" class="btn btn-dark px-4">
+                <i class="bi bi-check2-circle me-1"></i>
+                Save Inward
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{{ po_details|json_script:"po-details-data" }}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const poSelect = document.getElementById("id_purchase_order");
+    const quantityInput = document.getElementById("id_quantity");
+    const unitSelect = document.getElementById("id_unit");
+    const detailsBox = document.getElementById("po-details");
+
+    const dataElement = document.getElementById("po-details-data");
+
+    if (!poSelect || !quantityInput || !detailsBox || !dataElement) {
+        return;
+    }
+
+    const poDetails = JSON.parse(dataElement.textContent);
+
+    function updatePODetails() {
+        const selectedId = poSelect.value;
+
+        const po = poDetails.find(
+            item => String(item.id) === String(selectedId)
+        );
+
+        if (!po) {
+            detailsBox.style.display = "none";
+            quantityInput.removeAttribute("max");
+            quantityInput.removeAttribute("placeholder");
+            return;
+        }
+
+        detailsBox.style.display = "block";
+
+        document.getElementById("po-material").textContent = po.material;
+        document.getElementById("po-supplier").textContent = po.supplier;
+
+        document.getElementById("po-ordered").textContent =
+            `${po.ordered} ${po.unit}`;
+
+        document.getElementById("po-received").textContent =
+            `${po.received} ${po.unit}`;
+
+        document.getElementById("po-balance").textContent =
+            `${po.balance} ${po.unit}`;
+
+        quantityInput.max = po.balance;
+        quantityInput.placeholder = `Maximum ${po.balance}`;
+
+        if (unitSelect) {
+            unitSelect.value = po.unit;
+        }
+    }
+
+    poSelect.addEventListener("change", updatePODetails);
+    updatePODetails();
+});
+</script>
+{% endblock %}

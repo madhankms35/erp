@@ -1,0 +1,112 @@
+
+{% extends "base.html" %}
+
+{% block title %}Purchase Requests{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="page-title mb-1">Purchase Requests</h2>
+            <p class="page-description mb-0">
+                Review material shortages and create supplier orders.
+            </p>
+        </div>
+
+        <div class="text-muted small">
+            <i class="bi bi-file-earmark-text me-1"></i>
+            Material Procurement
+        </div>
+    </div>
+
+    <!-- Purchase Requests Table -->
+    <div class="card border shadow-sm">
+
+        <div class="card-header bg-white py-3 px-4">
+            <h6 class="section-title mb-0">Pending Purchase Requests</h6>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Production Plan</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Requested Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in purchase_requests %}
+                    <tr>
+                        <td class="text-muted fw-medium">
+                            #{{ item.id }}
+                        </td>
+
+                        <td>
+                            <span class="text-muted">
+                                #{{ item.production_plan_id }}
+                            </span>
+                        </td>
+
+                        <td class="fw-semibold">
+                            {{ item.material_name }}
+                        </td>
+
+                        <td class="fw-medium">
+                            {{ item.quantity_requested }}
+                        </td>
+
+                        <td>{{ item.unit }}</td>
+
+                        <td class="text-nowrap">
+                            {{ item.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td>
+                            <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+                                {{ item.status }}
+                            </span>
+                        </td>
+
+                        <td class="text-end">
+                            <a href="{% url 'purchase:create_order' item.id %}"
+                               class="btn btn-dark btn-sm text-nowrap">
+                                <i class="bi bi-cart-plus me-1"></i>
+                                Create Order
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+
+                            <div class="fw-semibold">
+                                No pending purchase requests
+                            </div>
+
+                            <p class="text-muted small mb-0 mt-1">
+                                Material purchase requests will appear here when created.
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

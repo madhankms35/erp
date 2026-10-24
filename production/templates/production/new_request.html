@@ -1,0 +1,54 @@
+```html
+{% extends 'base.html' %}
+
+{% block title %}New Production Request{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="page-title mb-1">New Production Request</h2>
+            <p class="page-description mb-0">
+                Create a request for manufacturing a finished product.
+            </p>
+        </div>
+
+        <a href="{% url 'production:production_plans' %}"
+           class="btn btn-outline-dark">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Production Plans
+        </a>
+    </div>
+
+    <!-- Request Form -->
+    <div class="card border shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h6 class="section-title mb-0">Request Details</h6>
+        </div>
+
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="d-flex flex-wrap gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-dark px-4">
+                        <i class="bi bi-check2-circle me-1"></i>
+                        Add Request
+                    </button>
+
+                    <a href="{% url 'production:production_plans' %}"
+                       class="btn btn-outline-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+```

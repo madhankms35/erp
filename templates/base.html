@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Manufacturing ERP{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        :root {
+            --black: #17191c;
+            --black-soft: #25282d;
+            --white: #ffffff;
+            --page-bg: #f7f7f8;
+            --sidebar-bg: #ffffff;
+            --border: #e1e3e6;
+            --text: #202328;
+            --muted: #747982;
+            --hover: #f0f1f2;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--text);
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           TOP NAVBAR
+        ========================= */
+
+        .erp-navbar {
+            height: 72px;
+            padding: 0 30px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .erp-brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: var(--black);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-icon {
+            font-size: 27px;
+            line-height: 1;
+        }
+
+        .brand-divider {
+            height: 28px;
+            width: 1px;
+            background: var(--border);
+            margin: 0 12px;
+        }
+
+        .brand-caption {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f1f2;
+            font-size: 19px;
+        }
+
+        /* =========================
+           MAIN LAYOUT
+        ========================= */
+
+        .erp-layout {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            padding: 26px 15px;
+        }
+
+        .sidebar-heading {
+            margin: 0 0 18px 14px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 49px;
+            padding: 12px 15px;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            color: #42464e;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.18s ease,
+                        color 0.18s ease;
+        }
+
+        .sidebar-link i {
+            width: 21px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .sidebar-link:hover {
+            background: var(--hover);
+            color: var(--black);
+        }
+
+        /* Add the active class to the current page link. */
+        .sidebar-link.active {
+            background: var(--black);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* =========================
+           PAGE CONTENT
+        ========================= */
+
+        .page-content {
+            flex: 1;
+            min-width: 0;
+            padding: 34px 30px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 26px;
+        }
+
+        .page-title {
+            margin: 0;
+            color: var(--black);
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .page-description {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn {
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 16px;
+            transition: all 0.18s ease;
+        }
+
+        .btn-dark {
+            background: var(--black);
+            border-color: var(--black);
+            color: var(--white);
+        }
+
+        .btn-dark:hover {
+            background: #34373c;
+            border-color: #34373c;
+            color: var(--white);
+        }
+
+        .btn-outline-dark {
+            border-color: #c9ccd1;
+            color: var(--text);
+        }
+
+        .btn-outline-dark:hover {
+            background: var(--black);
+            border-color: var(--black);
+            color: var(--white);
+        }
+
+        /* =========================
+           CARDS AND PANELS
+        ========================= */
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.025);
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 650;
+            color: var(--black);
+        }
+
+        /* =========================
+           TABLES
+        ========================= */
+
+        .table-responsive {
+            border-radius: 7px;
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .table thead th {
+            padding: 15px 14px;
+            background: #f0f1f2;
+            color: #272a2f;
+            border-bottom: 1px solid var(--border);
+            font-weight: 650;
+            white-space: nowrap;
+        }
+
+        .table tbody td {
+            padding: 15px 14px;
+            vertical-align: middle;
+            border-bottom: 1px solid #eceef0;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .table tbody tr:hover td {
+            background: #fafafa;
+        }
+
+        /* =========================
+           FORMS
+        ========================= */
+
+        .form-label {
+            margin-bottom: 7px;
+            color: #34373c;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 41px;
+            border-color: #d9dce0;
+            border-radius: 6px;
+            background-color: var(--white);
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #777b82;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.07);
+        }
+
+        .form-text {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =========================
+           STATUS BADGES
+        ========================= */
+
+        .badge {
+            padding: 6px 9px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: #e8e9eb;
+            color: #202328;
+        }
+
+        .status-pending {
+            background: #f3f3f3;
+            color: #565a61;
+            border: 1px solid #dedfe2;
+        }
+
+        .status-progress {
+            background: #dedfe2;
+            color: #202328;
+        }
+
+        /* =========================
+           DJANGO MESSAGES
+        ========================= */
+
+        .alert {
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .alert-info {
+            background: #f0f1f2;
+            border-color: #dedfe2;
+            color: #292c31;
+        }
+
+        .alert-success {
+            background: #eeeeee;
+            border-color: #d8dadd;
+            color: #24272b;
+        }
+
+        .alert-danger {
+            background: #f4eeee;
+            border-color: #e4d4d4;
+            color: #5d2929;
+        }
+
+        /* =========================
+           SMALL UTILITIES
+        ========================= */
+
+        .text-muted {
+            color: var(--muted) !important;
+        }
+
+        .content-panel {
+            padding: 18px;
+        }
+
+        .table-action {
+            color: #34373c;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .table-action:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* =========================
+           RESPONSIVE LAYOUT
+        ========================= */
+
+        @media (max-width: 991.98px) {
+            :root {
+                --sidebar-width: 220px;
+            }
+
+            .erp-navbar {
+                padding: 0 20px;
+            }
+
+            .page-content {
+                padding: 25px 20px;
+            }
+
+            .brand-caption,
+            .brand-divider {
+                display: none;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .erp-navbar {
+                height: 62px;
+                padding: 0 15px;
+            }
+
+            .erp-brand {
+                font-size: 17px;
+            }
+
+            .navbar-user .user-label {
+                display: none;
+            }
+
+            .erp-layout {
+                display: block;
+                min-height: calc(100vh - 62px);
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: 0;
+                padding: 12px;
+                border-right: 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .sidebar-heading {
+                margin: 0 0 10px 5px;
+            }
+
+            .sidebar-nav {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 5px;
+            }
+
+            .sidebar-link {
+                min-height: 42px;
+                gap: 8px;
+                padding: 9px;
+                font-size: 12px;
+            }
+
+            .sidebar-link i {
+                font-size: 16px;
+            }
+
+            .page-content {
+                padding: 22px 14px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-title {
+                font-size: 25px;
+            }
+
+            .card-body {
+                padding: 14px;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- TOP NAVBAR -->
+<nav class="erp-navbar">
+
+    <a href="#" class="erp-brand">
+        <i class="bi bi-buildings-fill brand-icon"></i>
+        <span>Manufacturing ERP</span>
+        <span class="brand-divider"></span>
+        <span class="brand-caption">Operations Management</span>
+    </a>
+
+    <div class="navbar-user">
+        <div class="user-avatar">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <span class="user-label">Operations Management</span>
+        <i class="bi bi-chevron-down"></i>
+    </div>
+
+</nav>
+
+<!-- APPLICATION LAYOUT -->
+<div class="erp-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-heading">Main Menu</div>
+
+        <nav class="sidebar-nav">
+
+            <a href={% url 'production:productionrequest' %} class="sidebar-link">
+                <i class="bi bi-grid"></i>
+                <span>Production Request</span>
+            </a>
+
+            <a href="{% url 'purchase:purchase_requests'%}" class="sidebar-link">
+                <i class="bi bi-cart3"></i>
+                <span>Purchase</span>
+            </a>
+
+            <a href={% url 'store:location_assignment' %} class="sidebar-link">
+                <i class="bi bi-house-door"></i>
+                <span>Store</span>
+            </a>
+
+            <a href="{% url 'qc:inspection_list'%}" class="sidebar-link">
+                <i class="bi bi-shield-check"></i>
+                <span>Quality Control</span>
+            </a>
+
+            <a href="{% url 'production:production_list'%}" class="sidebar-link">
+                <i class="bi bi-gear"></i>
+                <span>Production</span>
+            </a>
+
+            <a href={% url 'logistics:finished_goods_list' %} class="sidebar-link">
+                <i class="bi bi-box-seam"></i>
+                <span>Finished Goods</span>
+            </a>
+
+            <a href={% url 'logistics:dispatch_billing' %} class="sidebar-link">
+                <i class="bi bi-truck"></i>
+                <span>Billing &amp; Dispatch</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="page-content">
+
+        <!-- Django flash messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info alert-dismissible fade show"
+                     role="alert">
+
+                    {{ message }}
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                    </button>
+
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Child templates render their content here -->
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
