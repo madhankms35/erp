@@ -1,4 +1,4 @@
-# Environment
+# Environment variables
 .env
 .env.*
 
@@ -7,13 +7,15 @@ __pycache__/
 *.py[cod]
 *.pyo
 
-# Virtual environment
+# Virtual environments
 venv/
 .venv/
 env/
 
-# Django
+# Django local database
 db.sqlite3
+
+# Collected static files
 staticfiles/
 
 # IDE
