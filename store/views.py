@@ -84,7 +84,7 @@ def add_material(request):
                             f"balance: {po.quantity_ordered - total_received}."
                         )
 
-                        return redirect("add_material")
+                        return redirect("store:add_material")
 
     else:
         form = MaterialReceiptForm()
@@ -368,7 +368,7 @@ def location_assignment(request):
                 f"Location saved for receipt #{receipt.id}."
             )
 
-        return redirect("location_assignment")
+        return redirect("store:location_assignment")
 
     return render(
         request,

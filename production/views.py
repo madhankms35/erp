@@ -134,7 +134,7 @@ def start_production(request, request_id):
 
     # Recheck stock on the server before starting
     if not requirements.exists():
-        return redirect('check_materials', request_id=request_id)
+        return redirect('production:check_materials', request_id=request_id)
 
     for item in requirements:
         required = (
@@ -150,7 +150,7 @@ def start_production(request, request_id):
         )['total'] or Decimal('0')
 
         if available < required:
-            return redirect('check_materials', request_id=request_id)
+            return redirect('production:check_materials', request_id=request_id)
 
     ProductionPlan.objects.create(
         production_request=production_request,

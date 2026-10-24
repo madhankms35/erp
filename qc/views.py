@@ -40,3 +40,6 @@ def update_inspection(request, receipt_id):
     )
 
     return redirect("qc:inspection_list")
+
+
+
