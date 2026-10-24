@@ -3,7 +3,8 @@ from . import views
 app_name = 'production'
 urlpatterns = [
     path('production_record/',views.production_list,name='production_list'),
-    path('new/',views.Production_Request,name='productionrequest'),    
+    path('new/',views.Production_Request,name='productionrequest'),   
+    path('',views.Production_Request,name='productionrequest'),    
     path('new-plan/', views.new_plan, name='new_plan'),
     path('check-materials/<int:request_id>/', views.check_materials, name='check_materials'),
     path('start-production/<int:request_id>/', views.start_production, name='start_production'),
